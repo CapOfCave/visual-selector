@@ -29,7 +29,6 @@ public class Main {
                 renderer,
                 consoleInputManager);
 
-        selector.bindKeys();
         selector.render();
         consoleInputManager.startListening();
 

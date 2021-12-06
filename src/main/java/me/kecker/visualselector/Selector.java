@@ -9,15 +9,14 @@ import java.util.function.Function;
 public class Selector<T> {
     private final String prompt;
     private final T[] options;
-    private Function<T, String> toStringFunction;
+    private final Function<T, String> toStringFunction;
     private final String pointer;
     private final String activePointer;
+    private final Consumer<T> onSelect;
+    private final Renderer renderer;
+    private final TerminalManager inputManager;
 
     private int selected = 0;
-
-    private Consumer<T> onSelect;
-    private final Renderer renderer;
-    private final TerminalManager consoleInputManager;
 
     public Selector(
             String prompt,
@@ -27,7 +26,7 @@ public class Selector<T> {
             String activePointer,
             Consumer<T> onSelect,
             Renderer renderer,
-            TerminalManager consoleInputManager) {
+            TerminalManager inputManager) {
 
         this.prompt = prompt;
         this.options = options;
@@ -36,13 +35,14 @@ public class Selector<T> {
         this.activePointer = activePointer;
         this.onSelect = onSelect;
         this.renderer = renderer;
-        this.consoleInputManager = consoleInputManager;
+        this.inputManager = inputManager;
+        this.bindKeys();
     }
 
-    public void bindKeys() {
-        consoleInputManager.registerKey(InfoCmp.Capability.key_up, this::up);
-        consoleInputManager.registerKey(InfoCmp.Capability.key_down, this::down);
-        consoleInputManager.registerKey("\r", this::select);
+    private void bindKeys() {
+        inputManager.registerKey(InfoCmp.Capability.key_up, this::up);
+        inputManager.registerKey(InfoCmp.Capability.key_down, this::down);
+        inputManager.registerKey("\r", this::select);
     }
 
     public void render() {
@@ -56,7 +56,7 @@ public class Selector<T> {
 
     private void select() {
         this.onSelect.accept(this.selectedOption());
-        this.consoleInputManager.stop();
+        this.inputManager.stop();
     }
 
     private void down() {
