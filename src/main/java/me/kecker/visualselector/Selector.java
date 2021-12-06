@@ -11,31 +11,37 @@ public class Selector {
 
     private int selected = 0;
 
-    public Selector(String prompt, String[] options, String pointer, String activePointer) {
+    private final TerminalManager consoleInputManager;
+
+    public Selector(String prompt, String[] options, String pointer, String activePointer, TerminalManager consoleInputManager) {
         this.prompt = prompt;
         this.options = options;
         this.pointer = pointer;
         this.activePointer = activePointer;
+        this.consoleInputManager = consoleInputManager;
     }
 
-    public void start() {
 
-    }
-
-    public void bindKeys(ConsoleInputManager consoleInputManager) {
+    public void bindKeys() {
         consoleInputManager.registerKey(InfoCmp.Capability.key_up, this::up);
         consoleInputManager.registerKey(InfoCmp.Capability.key_down, this::down);
+        consoleInputManager.registerKey("\r", this::select);
 
+    }
+
+    private void select() {
+        System.out.printf("Oh, you chose %s? What a bold choice!%n", this.options[this.selected]);
+        this.consoleInputManager.stop();
     }
 
     private void down() {
         this.selected = (this.selected + 1) % this.options.length;
-        render();
+        rerender();
     }
 
     private void up() {
         this.selected = (this.selected + this.options.length - 1) % this.options.length ;
-        render();
+        rerender();
     }
 
     public void render() {
@@ -45,5 +51,10 @@ public class Selector {
             String pointer = this.selected == i ? this.activePointer : this.pointer;
             System.out.println(pointer + " " + option);
         }
+    }
+
+    public void rerender() {
+        this.consoleInputManager.clearScreen();
+        this.render();
     }
 }

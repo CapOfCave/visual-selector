@@ -8,7 +8,7 @@ import org.jline.utils.InfoCmp;
 
 import java.io.IOException;
 
-public class ConsoleInputManager {
+public class TerminalManager {
 
     private final Terminal terminal;
     private final BindingReader reader;
@@ -16,10 +16,10 @@ public class ConsoleInputManager {
     private final KeyMap<Runnable> registeredKeys = new KeyMap<>();
     private final Thread listeningThread;
 
-    private boolean running;
+    private volatile boolean running;
     private volatile boolean shouldStop;
 
-    public ConsoleInputManager() throws IOException {
+    public TerminalManager() throws IOException {
         this.terminal = TerminalBuilder.terminal();
         this.reader = new BindingReader(this.terminal.reader());
         this.listeningThread = new Thread(this::listenForInput);
@@ -67,5 +67,13 @@ public class ConsoleInputManager {
             Thread.onSpinWait();
         }
         this.running = false;
+    }
+
+    public void clearScreen() {
+//        terminal.puts(InfoCmp.Capability.clear_screen);
+//        terminal.flush();
+
+        System.out.printf("\033[%dA",4); // Move up
+        System.out.print("\033[2K"); // Erase line content
     }
 }
