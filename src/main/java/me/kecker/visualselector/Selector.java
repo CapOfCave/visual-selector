@@ -3,6 +3,8 @@ package me.kecker.visualselector;
 import me.kecker.visualselector.renderer.Renderer;
 import org.jline.utils.InfoCmp;
 
+import java.util.function.Consumer;
+
 public class Selector<T> {
     private final String prompt;
     private final T[] options;
@@ -11,14 +13,24 @@ public class Selector<T> {
 
     private int selected = 0;
 
+    private Consumer<T> onSelect;
     private final Renderer renderer;
     private final TerminalManager consoleInputManager;
 
-    public Selector(String prompt, T[] options, String pointer, String activePointer, Renderer renderer, TerminalManager consoleInputManager) {
+    public Selector(
+            String prompt,
+            T[] options,
+            String pointer,
+            String activePointer,
+            Consumer<T> onSelect,
+            Renderer renderer,
+            TerminalManager consoleInputManager) {
+
         this.prompt = prompt;
         this.options = options;
         this.pointer = pointer;
         this.activePointer = activePointer;
+        this.onSelect = onSelect;
         this.renderer = renderer;
         this.consoleInputManager = consoleInputManager;
     }
@@ -27,21 +39,6 @@ public class Selector<T> {
         consoleInputManager.registerKey(InfoCmp.Capability.key_up, this::up);
         consoleInputManager.registerKey(InfoCmp.Capability.key_down, this::down);
         consoleInputManager.registerKey("\r", this::select);
-    }
-
-    private void select() {
-        System.out.printf("Oh, you chose %s? What a bold choice!%n", this.options[this.selected]);
-        this.consoleInputManager.stop();
-    }
-
-    private void down() {
-        this.selected = (this.selected + 1) % this.options.length;
-        rerender();
-    }
-
-    private void up() {
-        this.selected = (this.selected + this.options.length - 1) % this.options.length ;
-        rerender();
     }
 
     public void render() {
@@ -53,8 +50,27 @@ public class Selector<T> {
         }
     }
 
-    public void rerender() {
+    private void select() {
+        this.onSelect.accept(this.selectedOption());
+        this.consoleInputManager.stop();
+    }
+
+    private void down() {
+        this.selected = (this.selected + 1) % this.options.length;
+        rerender();
+    }
+
+    private void up() {
+        this.selected = (this.selected + this.options.length - 1) % this.options.length;
+        rerender();
+    }
+
+    private void rerender() {
         this.renderer.clear();
         this.render();
+    }
+
+    private T selectedOption() {
+        return this.options[selected];
     }
 }

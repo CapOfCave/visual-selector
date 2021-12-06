@@ -23,6 +23,7 @@ public class Main {
                 new String[]{"blue", "green", "red"},
                 ">",
                 "*",
+                option -> System.out.printf("Oh, you chose %s? What a bold choice!%n", option),
                 renderer,
                 consoleInputManager);
 
