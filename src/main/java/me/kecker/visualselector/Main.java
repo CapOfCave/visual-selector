@@ -4,6 +4,7 @@ import me.kecker.visualselector.renderer.Renderer;
 import me.kecker.visualselector.renderer.TerminalRenderer;
 
 import java.io.IOException;
+import java.util.function.Function;
 
 public class Main {
 
@@ -21,6 +22,7 @@ public class Main {
         Selector<String> selector = new Selector<>(
                 "What color do you like best?",
                 new String[]{"blue", "green", "red"},
+                Function.identity(),
                 ">",
                 "*",
                 option -> System.out.printf("Oh, you chose %s? What a bold choice!%n", option),

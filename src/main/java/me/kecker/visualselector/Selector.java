@@ -4,10 +4,12 @@ import me.kecker.visualselector.renderer.Renderer;
 import org.jline.utils.InfoCmp;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class Selector<T> {
     private final String prompt;
     private final T[] options;
+    private Function<T, String> toStringFunction;
     private final String pointer;
     private final String activePointer;
 
@@ -20,6 +22,7 @@ public class Selector<T> {
     public Selector(
             String prompt,
             T[] options,
+            Function<T, String> toStringFunction,
             String pointer,
             String activePointer,
             Consumer<T> onSelect,
@@ -28,6 +31,7 @@ public class Selector<T> {
 
         this.prompt = prompt;
         this.options = options;
+        this.toStringFunction = toStringFunction;
         this.pointer = pointer;
         this.activePointer = activePointer;
         this.onSelect = onSelect;
@@ -46,7 +50,7 @@ public class Selector<T> {
         for (int i = 0; i < this.options.length; i++) {
             T option = this.options[i];
             String pointer = this.selected == i ? this.activePointer : this.pointer;
-            this.renderer.renderLine(pointer + " " + option);
+            this.renderer.renderLine(pointer + " " + this.toStringFunction.apply(option));
         }
     }
 
