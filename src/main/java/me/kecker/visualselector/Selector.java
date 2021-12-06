@@ -2,9 +2,9 @@ package me.kecker.visualselector;
 
 import org.jline.utils.InfoCmp;
 
-public class Selector {
+public class Selector<T> {
     private final String prompt;
-    private final String[] options;
+    private final T[] options;
     private final String pointer;
     private final String activePointer;
 
@@ -13,7 +13,7 @@ public class Selector {
 
     private final TerminalManager consoleInputManager;
 
-    public Selector(String prompt, String[] options, String pointer, String activePointer, TerminalManager consoleInputManager) {
+    public Selector(String prompt, T[] options, String pointer, String activePointer, TerminalManager consoleInputManager) {
         this.prompt = prompt;
         this.options = options;
         this.pointer = pointer;
@@ -21,12 +21,10 @@ public class Selector {
         this.consoleInputManager = consoleInputManager;
     }
 
-
     public void bindKeys() {
         consoleInputManager.registerKey(InfoCmp.Capability.key_up, this::up);
         consoleInputManager.registerKey(InfoCmp.Capability.key_down, this::down);
         consoleInputManager.registerKey("\r", this::select);
-
     }
 
     private void select() {
@@ -47,7 +45,7 @@ public class Selector {
     public void render() {
         System.out.println(this.prompt);
         for (int i = 0; i < this.options.length; i++) {
-            String option = this.options[i];
+            T option = this.options[i];
             String pointer = this.selected == i ? this.activePointer : this.pointer;
             System.out.println(pointer + " " + option);
         }

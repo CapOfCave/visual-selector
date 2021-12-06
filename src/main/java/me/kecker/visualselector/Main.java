@@ -13,7 +13,7 @@ public class Main {
 
         consoleInputManager.registerKey("x", consoleInputManager::stop);
 
-        Selector selector = new Selector("What color do you like best?", new String[]{"blue", "green", "red"}, ">", "*", consoleInputManager);
+        Selector<String> selector = new Selector<>("What color do you like best?", new String[]{"blue", "green", "red"}, ">", "*", consoleInputManager);
 
         selector.bindKeys();
         selector.render();
