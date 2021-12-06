@@ -1,5 +1,6 @@
 package me.kecker.visualselector;
 
+import me.kecker.visualselector.renderer.Renderer;
 import org.jline.utils.InfoCmp;
 
 public class Selector<T> {
@@ -8,16 +9,17 @@ public class Selector<T> {
     private final String pointer;
     private final String activePointer;
 
-
     private int selected = 0;
 
+    private final Renderer renderer;
     private final TerminalManager consoleInputManager;
 
-    public Selector(String prompt, T[] options, String pointer, String activePointer, TerminalManager consoleInputManager) {
+    public Selector(String prompt, T[] options, String pointer, String activePointer, Renderer renderer, TerminalManager consoleInputManager) {
         this.prompt = prompt;
         this.options = options;
         this.pointer = pointer;
         this.activePointer = activePointer;
+        this.renderer = renderer;
         this.consoleInputManager = consoleInputManager;
     }
 
@@ -43,16 +45,16 @@ public class Selector<T> {
     }
 
     public void render() {
-        System.out.println(this.prompt);
+        this.renderer.renderLine(this.prompt);
         for (int i = 0; i < this.options.length; i++) {
             T option = this.options[i];
             String pointer = this.selected == i ? this.activePointer : this.pointer;
-            System.out.println(pointer + " " + option);
+            this.renderer.renderLine(pointer + " " + option);
         }
     }
 
     public void rerender() {
-        this.consoleInputManager.clearScreen();
+        this.renderer.clear();
         this.render();
     }
 }

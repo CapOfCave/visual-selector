@@ -1,5 +1,8 @@
 package me.kecker.visualselector;
 
+import me.kecker.visualselector.renderer.Renderer;
+import me.kecker.visualselector.renderer.TerminalRenderer;
+
 import java.io.IOException;
 
 public class Main {
@@ -13,7 +16,15 @@ public class Main {
 
         consoleInputManager.registerKey("x", consoleInputManager::stop);
 
-        Selector<String> selector = new Selector<>("What color do you like best?", new String[]{"blue", "green", "red"}, ">", "*", consoleInputManager);
+        Renderer renderer = new TerminalRenderer();
+
+        Selector<String> selector = new Selector<>(
+                "What color do you like best?",
+                new String[]{"blue", "green", "red"},
+                ">",
+                "*",
+                renderer,
+                consoleInputManager);
 
         selector.bindKeys();
         selector.render();

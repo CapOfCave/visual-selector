@@ -68,12 +68,4 @@ public class TerminalManager {
         }
         this.running = false;
     }
-
-    public void clearScreen() {
-//        terminal.puts(InfoCmp.Capability.clear_screen);
-//        terminal.flush();
-
-        System.out.printf("\033[%dA",4); // Move up
-        System.out.print("\033[2K"); // Erase line content
-    }
 }
