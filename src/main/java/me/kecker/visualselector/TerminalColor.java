@@ -1,3 +1,5 @@
+package me.kecker.visualselector;
+
 public enum TerminalColor {
     BLACK("\u001B[30m"),
     RED("\u001B[31m"),

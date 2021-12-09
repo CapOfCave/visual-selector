@@ -23,6 +23,7 @@ public class TerminalManager {
         this.terminal = TerminalBuilder.terminal();
         this.reader = new BindingReader(this.terminal.reader());
         this.listeningThread = new Thread(this::listenForInput);
+        this.registerDefaultKeys();
     }
 
     public void startListening() {
@@ -34,6 +35,11 @@ public class TerminalManager {
         this.terminal.enterRawMode();
 
         listeningThread.start();
+    }
+
+    void registerDefaultKeys() {
+        // TODO
+        this.registerKey("x", this::stop);
     }
 
     public void registerKey(String key, Runnable onKeyPress) {
@@ -48,7 +54,6 @@ public class TerminalManager {
     }
 
     public void stop() {
-        System.out.println("stopping...");
         this.shouldStop = true;
     }
 
@@ -59,7 +64,7 @@ public class TerminalManager {
     private void listenForInput() {
         while (!this.shouldStop) {
             Runnable runnable = this.reader.readBinding(this.registeredKeys, null, true);
-            // check if this.running has changed while waiting for an input
+            // check if this.shouldStop has changed while waiting for input
             if (runnable != null && !this.shouldStop) {
                 runnable.run();
             }
