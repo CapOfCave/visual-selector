@@ -39,7 +39,7 @@ public class TerminalManager {
 
     void registerDefaultKeys() {
         // TODO
-        this.registerKey("x", this::stop);
+        this.registerKey("x", this::stopListening);
     }
 
     public void registerKey(String key, Runnable onKeyPress) {
@@ -53,7 +53,7 @@ public class TerminalManager {
         this.registerKey(KeyMap.key(this.terminal, capability), onKeyPress);
     }
 
-    public void stop() {
+    public void stopListening() {
         this.shouldStop = true;
     }
 
