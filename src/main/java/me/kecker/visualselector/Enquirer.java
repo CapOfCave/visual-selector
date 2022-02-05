@@ -78,7 +78,10 @@ public class Enquirer {
             this.renderer.clear();
             prompt.render(this.renderer);
         });
-        prompt.addCompletionListener(r -> this.inputManager.stopListening());
+        prompt.addCompletionListener(r -> {
+            this.inputManager.stopListening();
+            this.renderer.commit();
+        });
         prompt.addCompletionListener(callback);
         this.inputManager.startListening();
         prompt.render(this.renderer);

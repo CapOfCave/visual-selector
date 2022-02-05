@@ -5,4 +5,6 @@ public interface Renderer {
     void renderLine(String content);
 
     void clear();
+
+    void commit();
 }

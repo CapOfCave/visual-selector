@@ -26,7 +26,7 @@ public class Main {
                 "*"
         ));
         while (newOption.equals(option)) {
-            System.out.printf("I told you not to choose %s! Try again, please.", option);
+            System.out.printf("I told you not to choose %s! Try again, please.%n", option);
             newOption = Enquirer.prompt( new Selector<>(
                     "What color do you like best?",
                     new String[]{"blue", "green", "red"},
@@ -35,7 +35,7 @@ public class Main {
                     "*"
             ));
         }
-        System.out.printf("%s is a much nicer color, glad you reconsidered your choice", newOption);
+        System.out.printf("%s is a much nicer color, glad you reconsidered your choice.%n", newOption);
 
 
 

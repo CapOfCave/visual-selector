@@ -15,5 +15,10 @@ public abstract class AbstractRenderer implements Renderer {
         this.lineCount = 0;
     }
 
+    @Override
+    public void commit() {
+        this.lineCount = 0;
+    }
+
     protected abstract void clear(int lines);
 }
