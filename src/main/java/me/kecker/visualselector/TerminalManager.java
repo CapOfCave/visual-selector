@@ -2,6 +2,7 @@ package me.kecker.visualselector;
 
 import org.jline.keymap.BindingReader;
 import org.jline.keymap.KeyMap;
+import org.jline.terminal.Attributes;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.InfoCmp;
@@ -14,15 +15,17 @@ public class TerminalManager {
     private final BindingReader reader;
 
     private final KeyMap<Runnable> registeredKeys = new KeyMap<>();
-    private final Thread listeningThread;
+    private Thread listeningThread; // TODO perf ops
 
     private volatile boolean running;
     private volatile boolean shouldStop;
 
+    /** Terminal's Attribute state to use on reset */
+    private Attributes defaultTerminalAttributes;
+
     public TerminalManager() throws IOException {
         this.terminal = TerminalBuilder.terminal();
         this.reader = new BindingReader(this.terminal.reader());
-        this.listeningThread = new Thread(this::listenForInput);
         this.registerDefaultKeys();
     }
 
@@ -32,8 +35,9 @@ public class TerminalManager {
         }
         this.running = true;
         this.shouldStop = false;
-        this.terminal.enterRawMode();
+        this.defaultTerminalAttributes = this.terminal.enterRawMode();
 
+        this.listeningThread = new Thread(this::listenForInput);
         listeningThread.start();
     }
 
@@ -59,6 +63,10 @@ public class TerminalManager {
 
     public boolean isTerminalDumb() {
         return "dumb".equals(terminal.getType()) || "dumb-color".equals(terminal.getType());
+    }
+
+    public void cleanUp() {
+        this.terminal.setAttributes(this.defaultTerminalAttributes);
     }
 
     private void listenForInput() {

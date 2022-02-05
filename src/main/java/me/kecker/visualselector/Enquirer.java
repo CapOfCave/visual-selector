@@ -69,7 +69,7 @@ public class Enquirer {
     }
 
     public void close() {
-        // TODO remove if unnecessary
+        this.inputManager.cleanUp();
     }
 
     private <T> void doPrompt(Prompt<T> prompt, Consumer<T> callback) {
